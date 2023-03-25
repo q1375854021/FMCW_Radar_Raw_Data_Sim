@@ -44,9 +44,10 @@ temp = zeros(Na,Nr);         %临时的数组，用于存储单个目标的回波
 
 for i = 1:target_number      %对每个目标进行循环
     for j = 1:Na             %对每个方位向进行循环
-        R = sqrt( (target(i,1)-radar(1)).^2 + (target(i,2)-(V*(ta(j)+tr)-radar(2))).^2);       %求取目标和雷达之间的瞬时距离
+        R = sqrt( (target(i,1)-radar(1)).^2 + (target(i,2)-(radar(2)+V*(ta(j)+tr))).^2 + (target(i,3)-radar(3)).^2 );     %求取目标和雷达之间的瞬时距离
         tau = 2*R/c;            %计算时延
         temp(j,:) = exp(1j*2*pi*K*tr.*tau + 1j*2*pi*f0*tau - 1j*pi*K*tau.^2);         %根据公式计算单目标回波
+%         temp(j,:) = exp(-1j*2*pi*K*tr.*tau - 1j*2*pi*f0*tau + 1j*pi*K*tau.^2);      %两种均是变频结果，可根据实际情况使用         
     end
     sif = sif + temp;                  %对所有目标的回波进行叠加，即得到了最终的回波数据
 end
